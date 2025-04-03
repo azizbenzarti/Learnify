@@ -1,0 +1,61 @@
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Courses from "./student/studentPages/StudentCourses";
+import Notes from "./student/studentPages/StudentNotes";
+import Settings from "./student/studentPages/Settings";
+import TeacherSettings from "./teacher/teacherPages/TeacherSettings";
+import Studentdashboard from "./student/studentPages/StudentDashboard";
+import Teacherdashboard from "./teacher/teacherPages/TeacherDashboard";
+import TeacherCourses from "./teacher/teacherPages/TeacherCourses";
+import CoursePage from "./student/studentPages/CoursePage";
+import ChapterPage from "./student/studentPages/ChapterPage";
+import Grades from "./student/studentPages/Grades";
+import Login from "./pages/Login";
+import Home from "./pages/Home";
+import TutorSignUp from "./pages/TutorSignUp";
+import SignUp from "./pages/SignUp";
+import ResetPassword from "./pages/ResetPassword";
+import ForgetPassword from "./pages/ForgetPassword";
+import PostUserSignUp from "./pages/PostUserSignUp";
+import ChapterForm from "./pages/ChapterForm";
+import CourseContent from "./pages/CourseContent";
+
+import { AuthProvider } from "./contexts/userContext";
+
+
+
+const App = () => {
+  return (
+    <AuthProvider>
+      <Router>
+        <div className="flex">
+          <div className="flex-1 p-6">
+            <Routes>
+              <Route path="/student" element={<Studentdashboard />} />
+              <Route path="/teacher" element={<Teacherdashboard />} />
+              <Route path="/teacher-courses" element={<TeacherCourses />} />
+              <Route path="/courses" element={<Courses />} />
+              <Route path="/course/:id" element={<CoursePage />} />
+              <Route path="/teacher-settings" element={<TeacherSettings />} />
+              <Route path="/course/:id/chapter/:chapterIndex" element={<ChapterPage />}/>
+              <Route path="/notes" element={<Notes />} />
+              <Route path="/student-settings" element={<Settings />} />
+              <Route path="/grades" element={<Grades />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/signup" element={<SignUp />} />
+              <Route path="/teacher-signup" element={<TutorSignUp />} />
+              <Route path="/forget-password" element={<ForgetPassword />} />
+              <Route path="/home" element={<Home />} />
+              <Route path="/post-user-signup" element={<PostUserSignUp />} />
+              <Route path="/reset-password" element={<ResetPassword />} />
+              <Route path="/chapter" element={<ChapterForm />} />
+              <Route path="/course/:courseId"  element={<CourseContent />} />
+              </Routes>
+          </div>
+        </div>
+      </Router>
+    </AuthProvider>
+    
+  );
+};
+
+export default App;

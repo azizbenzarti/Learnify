@@ -1,0 +1,9 @@
+
+
+e-learning-app/Backend/course-service/.env
+e-learning-app/Backend/user-service/.env
+e-learning-app/Frontend/.env
+e-learning-app/Backend/course-service/node_modules/
+e-learning-app/Backend/user-service/node_modules/
+e-learning-app/Frontend/node_modules/
+
