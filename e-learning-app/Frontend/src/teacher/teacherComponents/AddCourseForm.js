@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { createCourse, resetCourseCreate ,listCourses} from "../../Redux/Actions/course";
+import { getIdFromToken } from "../../utils/auth"; 
+
 
 const AddCourseForm = ({ closeModal }) => {
   const dispatch = useDispatch();
@@ -8,6 +10,12 @@ const AddCourseForm = ({ closeModal }) => {
   // Form state
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
+
+ 
+const token = localStorage.getItem('authToken'); 
+const id = getIdFromToken(token); 
+
+
 
   // Access the create course state from Redux
   const { loading, success, error } = useSelector(
@@ -18,7 +26,12 @@ const AddCourseForm = ({ closeModal }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     // Dispatch createCourse action
-    dispatch(createCourse(name, description));
+    if (id) {
+      dispatch(createCourse(name, description, id)); 
+    } else {
+      console.error("Failed to retrieve user ID from token.");
+    }
+    
   };
 
   useEffect(() => {

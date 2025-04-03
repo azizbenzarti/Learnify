@@ -17,11 +17,11 @@ import {
 import { BASE_URL } from "../Constants/BASE_URL";
 
 // ✅ Create Course
-export const createCourse = (name,description) => async (dispatch) => {
+export const createCourse = (name,description,owner) => async (dispatch) => {
   try {
     dispatch({ type: COURSE_CREATE_REQUEST });
 
-    const { data } = await axios.post(`${BASE_URL}/course`, {name,description});
+    const { data } = await axios.post(`${BASE_URL}/course`, {name,description,owner});
 
     dispatch({ type: COURSE_CREATE_SUCCESS, payload: data.course });
   } catch (error) {
