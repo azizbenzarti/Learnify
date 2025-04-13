@@ -17,37 +17,63 @@ exports.login = async (req, res) => {
   }
 };
 
+// exports.tutorRegister = async (req, res) => {
+//   try {
+//     console.log("Request body:", req.body); // Debugging
+//     // Parse the JSON string from the 'data' field
+//     const bodyData = JSON.parse(req.body.data);
+
+//     // Initialize tutorDetails if it doesn't exist
+//     if (!bodyData.tutorDetails) {
+//       bodyData.tutorDetails = {};
+//     }
+
+//     // Convert uploaded file to base64 and add it to tutorDetails
+//     if (req.file) {
+//       const base64String = `data:application/pdf;base64,${req.file.buffer.toString(
+//         "base64"
+//       )}`;
+//       bodyData.tutorDetails.cv = base64String;
+//     }
+
+//     //console.log("Body in controller:", bodyData);
+
+//     // Call the service layer with the parsed data
+//     const result = await userService.tutorRegister(bodyData);
+//     res.status(201).json({ message: "Tutor registered successfully", result });
+//   } catch (error) {
+//     console.error(error);
+//     res
+//       .status(error.status || 500)
+//       .json({ error: error.error || "Internal Server Error" });
+//   }
+// };
+
 exports.tutorRegister = async (req, res) => {
   try {
-    // Parse the JSON string from the 'data' field
-    const bodyData = JSON.parse(req.body.data);
+    // console.log("Request body:", req.body);
+    // console.log("Uploaded file:", req.file);
 
-    // Initialize tutorDetails if it doesn't exist
-    if (!bodyData.tutorDetails) {
-      bodyData.tutorDetails = {};
-    }
+    // No need to parse JSON - data comes directly in req.body
+    const bodyData = {
+      ...req.body,
+      tutorDetails: {
+        expertise: JSON.parse(req.body.expertise), // Parse the expertise string
+        cv: req.file
+          ? `data:application/pdf;base64,${req.file.buffer.toString("base64")}`
+          : null,
+      },
+    };
 
-    // Convert uploaded file to base64 and add it to tutorDetails
-    if (req.file) {
-      const base64String = `data:application/pdf;base64,${req.file.buffer.toString(
-        "base64"
-      )}`;
-      bodyData.tutorDetails.cv = base64String;
-    }
-
-    //console.log("Body in controller:", bodyData);
-
-    // Call the service layer with the parsed data
     const result = await userService.tutorRegister(bodyData);
     res.status(201).json({ message: "Tutor registered successfully", result });
   } catch (error) {
     console.error(error);
-    res
-      .status(error.status || 500)
-      .json({ error: error.error || "Internal Server Error" });
+    res.status(error.status || 500).json({
+      error: error.error || error.message || "Internal Server Error",
+    });
   }
 };
-
 
 exports.tutorAccept = async (req, res) => {
   try {
@@ -61,8 +87,6 @@ exports.tutorAccept = async (req, res) => {
       .json({ error: error.error || "Internal Server Error" });
   }
 };
-
-
 
 exports.studentRegister = async (req, res) => {
   try {
@@ -130,12 +154,10 @@ exports.forgetPassword = async (req, res) => {
       return res.status(404).json({ message: result.message });
     }
 
-    res
-      .status(200)
-      .json({
-        message: "Reset password email sent",
-        resetPasswordToken: result.resetPasswordToken,
-      });
+    res.status(200).json({
+      message: "Reset password email sent",
+      resetPasswordToken: result.resetPasswordToken,
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: error.message });
@@ -152,8 +174,6 @@ exports.resetPassword = async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 };
-
-
 
 // exports.get("/logout", (req, res) => {
 //   //TO DEFINE IN CLIENT

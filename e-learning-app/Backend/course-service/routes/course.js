@@ -1,4 +1,9 @@
 const express = require("express");
+
+const isTutor = require("../../user-service/middlewares/tutorAuth");
+
+const authenticate=require("../../user-service/middlewares/auth");
+
 const  {
     createCourse,
     getCourses,
@@ -9,10 +14,10 @@ const  {
 
 const courseRouter = express.Router();
 
-courseRouter.post("/", createCourse);
-courseRouter.get("/", getCourses);
-courseRouter.get("/:id", getCourseById);
-courseRouter.put("/:id", updateCourse);
-courseRouter.delete("/:id", deleteCourse);
+courseRouter.post("/",isTutor,authenticate, createCourse);
+courseRouter.get("/",isTutor,authenticate,getCourses);
+courseRouter.get("/:id", isTutor,authenticate, getCourseById);
+courseRouter.put("/:id", isTutor,authenticate, updateCourse);
+courseRouter.delete("/:id",isTutor ,authenticate, deleteCourse);
 
 module.exports = courseRouter;

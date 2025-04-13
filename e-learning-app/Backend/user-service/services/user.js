@@ -1,18 +1,18 @@
-require('dotenv').config();
+require("dotenv").config();
 
-const bcrypt = require('bcrypt');
-const validator = require('validator');
-const jwt = require('jsonwebtoken');
-const nodemailer = require('nodemailer');
-const crypto = require('crypto');
-const generatePwd = require('generate-password');
-const cloudinary = require('cloudinary').v2;
-const userModel = require('../models/user');
+const bcrypt = require("bcrypt");
+const validator = require("validator");
+const jwt = require("jsonwebtoken");
+const nodemailer = require("nodemailer");
+const crypto = require("crypto");
+const generatePwd = require("generate-password");
+const cloudinary = require("cloudinary").v2;
+const userModel = require("../models/user");
 const accountveriftokenModel = require("../models/accountveriftoken");
 const resetpasswordtokenModel = require("../models/resetpasswordtoken");
 const uploadPdfToCloudinary = require("../utils/uploadPdfCloudinary");
 
-const { error } = require('console');
+const { error } = require("console");
 
 exports.login = async (email, password) => {
   const user = await userModel.findOne({ email });
@@ -26,31 +26,29 @@ exports.login = async (email, password) => {
   }
 
   if (!user.verified) {
-   throw { status: 403, message: "Account not verified" }; 
-  
-
+    throw { status: 403, message: "Account not verified" };
   }
 
   const secretKey = process.env.JWT_SECRET;
   const payload = {
     _id: user._id,
     role: user.role,
-    name:user.name,
+    name: user.name,
   };
 
   const token = jwt.sign(payload, secretKey);
 
-  console.log("User logged in successfully: ",token);
+  console.log("User logged in successfully: ", token);
 
   return { token, verified: user.verified };
 };
 
 exports.tutorRegister = async (data) => {
-  const { name, email, password, tutorDetails } = data;
-  if (!name || !email || !password) {
+  const { name, email, tutorDetails } = data;
+  if (!name || !email) {
     throw {
       status: 400,
-      error: "Missing required fields: name, email, password",
+      error: "Missing required fields: name, email",
     };
   }
 
@@ -125,7 +123,6 @@ exports.tutorRegister = async (data) => {
   await transporter.sendMail(mailOptions);
 };
 
-
 exports.tutorAccept = async (tutorId) => {
   try {
     const tutor = userModel.findOne({ _id: tutorId, role: "tutor" });
@@ -179,8 +176,7 @@ exports.tutorAccept = async (tutorId) => {
     `,
     };
 
-      await transporter.sendMail(mailOptions);
-
+    await transporter.sendMail(mailOptions);
 
     return { success: true, message: "Password sent successfully via email" };
   } catch (error) {
@@ -193,7 +189,10 @@ exports.studentRegister = async (data) => {
 
   // Validate required fields
   if (!name || !email || !password) {
-    throw {status: 400, error: "Missing required fields: name, email, password",};
+    throw {
+      status: 400,
+      error: "Missing required fields: name, email, password",
+    };
   }
 
   // Validate student-specific fields
@@ -219,7 +218,7 @@ exports.studentRegister = async (data) => {
   const salt = await bcrypt.genSalt(10);
   const hashedPassword = await bcrypt.hash(password, salt);
 
-    //console.log(studentDetails.interests);
+  //console.log(studentDetails.interests);
   // Create a new user instance
   const newStudent = new userModel({
     name,
@@ -291,34 +290,36 @@ exports.studentRegister = async (data) => {
 };
 
 exports.verifyStudentAccount = async (userId, token) => {
-    try {
-        const user = await userModel.findById(userId);
-        if (!user) {
-            return { success: false, message: "Invalid Verification Link" }
-        }
-
-        if (user.verified) {
-            return { success: false, message: "User Already Verified" };
-        }
-
-        const verificationToken = await accountveriftokenModel.findOne({ userId, token, });
-        if (!verificationToken) {
-            return { success: false, message: "Invalid Verification Link" };
-        }
-        user.verified = true;
-      await user.save();
-      console.log("user verified");
-        await accountveriftokenModel.findByIdAndDelete(verificationToken._id);
-      return {
-        success: true, message: "Email verified successfully." ,
-          redirect: `${process.env.FRONTEND_URL}/login`,
-        };
-
+  try {
+    const user = await userModel.findById(userId);
+    if (!user) {
+      return { success: false, message: "Invalid Verification Link" };
     }
-    catch (error) {
-        console.log(error);
-        return { success: false, message: "An error occured" }
+
+    if (user.verified) {
+      return { success: false, message: "User Already Verified" };
     }
+
+    const verificationToken = await accountveriftokenModel.findOne({
+      userId,
+      token,
+    });
+    if (!verificationToken) {
+      return { success: false, message: "Invalid Verification Link" };
+    }
+    user.verified = true;
+    await user.save();
+    console.log("user verified");
+    await accountveriftokenModel.findByIdAndDelete(verificationToken._id);
+    return {
+      success: true,
+      message: "Email verified successfully.",
+      redirect: `${process.env.FRONTEND_URL}/login`,
+    };
+  } catch (error) {
+    console.log(error);
+    return { success: false, message: "An error occured" };
+  }
 };
 
 exports.forgetPassword = async (email) => {
@@ -380,50 +381,40 @@ exports.forgetPassword = async (email) => {
   }
 };
 
-
 // <a href="${process.env.FRONTEND_URL}/reset-password?token=${resetPasswordToken.token}">
 // is the link to the new pwd input (form) in the client
 
-exports.resetPassword = async (newPassword, token) => { 
-
-    try {
-        const passToken = await resetpasswordtokenModel.findOne({ token })
-        if (!passToken) {
-            throw new Error("Invalid Token");
-        }
-        if (passToken.expired || passToken.expiresAt < Date.now())
-            throw new Error("Token Expired");
-
-        const hashedPassword = await bcrypt.hash(newPassword, 10);
-
-        await userModel.findByIdAndUpdate(passToken.userId, {
-            password: hashedPassword,
-        });
-        passToken.expired = true;
-        passToken.expiresAt = undefined;
-        await passToken.save();
-        return { success: true, message: "Password reset successfully" };
+exports.resetPassword = async (newPassword, token) => {
+  try {
+    const passToken = await resetpasswordtokenModel.findOne({ token });
+    if (!passToken) {
+      throw new Error("Invalid Token");
     }
-    catch (error) {
-        throw new Error(error.message);
-    }
+    if (passToken.expired || passToken.expiresAt < Date.now())
+      throw new Error("Token Expired");
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    await userModel.findByIdAndUpdate(passToken.userId, {
+      password: hashedPassword,
+    });
+    passToken.expired = true;
+    passToken.expiresAt = undefined;
+    await passToken.save();
+    return { success: true, message: "Password reset successfully" };
+  } catch (error) {
+    throw new Error(error.message);
+  }
 };
 
-exports.getUserData = async (userId) => { 
-
-    try {
-        const user = await userModel.findById(userId).select("-password -__v");
-        if (!user) {
-            throw new Error("User not found");
-        }
-        return user;
-    } catch (error) {
-        throw new Error(error.message);
+exports.getUserData = async (userId) => {
+  try {
+    const user = await userModel.findById(userId).select("-password -__v");
+    if (!user) {
+      throw new Error("User not found");
     }
+    return user;
+  } catch (error) {
+    throw new Error(error.message);
+  }
 };
-
-
-
-
-
-

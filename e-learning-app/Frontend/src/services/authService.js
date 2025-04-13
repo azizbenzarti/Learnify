@@ -4,6 +4,7 @@ const BASE_URL = process.env.REACT_APP_AUTHSERVICE_USER_BASE_URL;
 
 const authService = {
   login: async (email, password) => {
+    // console.log("Login function called with email");// Debugging 
     try {
       const response = await axios.post(`${BASE_URL}/login`, {
         email,

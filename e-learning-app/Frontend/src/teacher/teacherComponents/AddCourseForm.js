@@ -12,7 +12,8 @@ const AddCourseForm = ({ closeModal }) => {
   const [description, setDescription] = useState("");
 
  
-const token = localStorage.getItem('authToken'); 
+  const token = localStorage.getItem('jwt'); 
+  //console.log("Token retrieved from localStorage:", token); // debugging 
 const id = getIdFromToken(token); 
 
 
@@ -26,7 +27,9 @@ const id = getIdFromToken(token);
   const handleSubmit = (e) => {
     e.preventDefault();
     // Dispatch createCourse action
+    //console.log("User ID from token:", id);  // debugging
     if (id) {
+      
       dispatch(createCourse(name, description, id)); 
     } else {
       console.error("Failed to retrieve user ID from token.");

@@ -4,7 +4,7 @@ const createCourse = async (courseData) => {
   return await Course.create(courseData);
 };
 
-const getCourses = async () => {
+const getCourses = async (req,res) => {
     return await Course.find();
 //   return await Course.find().populate("owner", "name email");
 };

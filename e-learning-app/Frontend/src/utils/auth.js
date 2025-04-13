@@ -28,7 +28,7 @@ export const getIdFromToken = (token) => {
   if (!token) return null;
   try {
     const payload = JSON.parse(atob(token.split(".")[1]));
-    return payload?.id; // Safely access the id property
+    return payload?._id; // Safely access the id property
   } catch (e) {
     console.error("Token decoding error:", e);
     return null;

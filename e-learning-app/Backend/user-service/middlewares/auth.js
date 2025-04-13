@@ -7,19 +7,19 @@ const authenticateToken = (req, res, next) => {
       return res
         .status(401)
         .json({ error: "Unauthorized: Token not provided" }); 
-    }
+  }
+  //console.log("Auth header from auth :", authHeader); //debug 
   const token = authHeader.split(" ")[1];
     if (!token) {
       return res.status(401).json({ error: "Token not provided" });
     }
-  console.log("Token:", token);
 
   jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
     if (err) {
       console.log("Error decoding token:", err);
       return res.status(403).json({ error: "Failed to authenticate user" });
     }
-    console.log("Decoded token:", decoded);
+    console.log("Decoded token from authenticate:", decoded);
     req.user = {};
     req.user._id = decoded._id;
     req.user.email = decoded.email;

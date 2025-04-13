@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { PlusIcon } from "@heroicons/react/solid";
+import { PlusIcon } from "@heroicons/react/24/solid";
 import authService from "../services/authService";
 
 export default function TutorSignupForm() {
@@ -12,8 +12,9 @@ export default function TutorSignupForm() {
   });
 
   const [expertise, setExpertise] = useState([{ field: "", role: "", at: "" }]);
-
   const [cvFile, setCvFile] = useState(null);
+  const [message, setMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleCredentialsChange = (e) => {
     const { name, value } = e.target;
@@ -35,16 +36,63 @@ export default function TutorSignupForm() {
     setCvFile(e.target.files[0]);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    navigateTo("/login"); 
-    // console.log("Credentials:", credentials);
-    // console.log("Expertise:", expertise);
-    // console.log("CV File:", cvFile);
-    //form submission logic here
+    setIsLoading(true);
+    setMessage("");
+
+    try {
+      // Validate required fields
+      if (!credentials.name || !credentials.email) {
+        throw new Error("Please fill all required fields");
+      }
+
+      if (!cvFile) {
+        throw new Error("Please upload your CV");
+      }
+
+      // Validate expertise fields
+      const invalidExpertise = expertise.some(
+        (exp) => !exp.field || !exp.role || !exp.at
+      );
+      if (invalidExpertise) {
+        throw new Error("Please fill all expertise fields");
+      }
+
+      // Prepare form data
+      const formData = new FormData();
+      formData.append("name", credentials.name);
+      formData.append("email", credentials.email);
+      formData.append("cv", cvFile);
+      formData.append("expertise", JSON.stringify(expertise));
+
+      // Call the API
+      const response = await authService.tutorSignUp(formData);
+
+      setMessage(
+        "Your application has been received. We will contact you soon."
+      );
+
+      // Clear form after successful submission
+      setCredentials({
+        name: "",
+        email: "",
+      });
+      setExpertise([{ field: "", role: "", at: "" }]);
+      setCvFile(null);
+    } catch (error) {
+      console.error("Signup error:", error);
+      setMessage(
+        error.response?.data?.error ||
+          error.message ||
+          "An error occurred. Please try again."
+      );
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const handleBack = () => { 
+  const handleBack = () => {
     navigateTo("/login");
   };
 
@@ -186,6 +234,7 @@ export default function TutorSignupForm() {
               </button>
             </div>
           </div>
+
           <div className="border-b border-gray-900/10 pb-8">
             <h3 className="text-lg font-semibold text-gray-900">CV</h3>
             <div className="mt-6">
@@ -209,7 +258,18 @@ export default function TutorSignupForm() {
             </div>
           </div>
 
-          <div>
+          {/* Message display area */}
+          {message && (
+            <div
+              className={`mt-4 text-center text-sm ${
+                message.includes("received") ? "text-green-600" : "text-red-600"
+              }`}
+            >
+              {message}
+            </div>
+          )}
+
+          <div className="flex gap-4">
             <button
               type="button"
               className="w-1/2 py-2 px-4 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
@@ -219,9 +279,10 @@ export default function TutorSignupForm() {
             </button>
             <button
               type="submit"
+              disabled={isLoading}
               className="w-1/2 py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
             >
-              Submit
+              {isLoading ? "Submitting..." : "Submit"}
             </button>
           </div>
         </form>

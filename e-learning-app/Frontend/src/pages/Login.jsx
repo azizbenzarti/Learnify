@@ -2,10 +2,13 @@ import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../contexts/userContext";
 import authService from "../services/authService";
+import NavigationHeader from "../components/NavigationHeader";
+
+import { getRoleFromToken } from "../utils/auth";
 
 export default function Login() {
   const navigateTo = useNavigate();
-  const {auth} = useContext(AuthContext);
+  const { auth } = useContext(AuthContext);
   const [jwt, setJwt] = auth;
   const [formInput, setFormInput] = useState({
     email: "",
@@ -13,15 +16,23 @@ export default function Login() {
   });
   const [error, setError] = useState("");
 
+  // UseEffect to handle navigation after jwt is updated
   useEffect(() => {
     if (jwt) {
-      navigateTo("/home"); 
+      // Get role from token
+      const role = getRoleFromToken(jwt);
+      // Redirect based on role
+      if (role === "tutor") {
+        navigateTo("/teacher");
+      } else if (role === "student") {
+        navigateTo("/home");
+      } 
     }
   }, [jwt, navigateTo]);
 
   const handleForm = async (e) => {
-    e.preventDefault(); // Prevent default form submission
-    setError(""); // Clear any previous errors
+    e.preventDefault();
+    setError("");
 
     try {
       const response = await authService.login(
@@ -29,26 +40,18 @@ export default function Login() {
         formInput.password
       );
 
-      console.log("Token received on Login.jsx :", response.data.token);
-
-      // Save the JWT token to context or local storage
-      setJwt(response.data.token);
-
-      //console.log("Auth context updated:", jwt); 
+      const token = response.data.token;
+      setJwt(token); // Update the JWT in context
 
       setFormInput({ email: "", password: "" });
-
-      // Redirect to the home page
-      navigateTo("/home");
     } catch (error) {
-      setError(
-        error.response?.data?.message || "Login failed. Please try again."
-      );
+      setError(error.response?.data?.message || "Login failed");
     }
   };
 
   return (
     <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
+
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
         <img
           alt="Learnify"

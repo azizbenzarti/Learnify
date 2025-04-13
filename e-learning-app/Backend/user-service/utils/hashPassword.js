@@ -1,6 +1,9 @@
 const bcrypt = require("bcrypt");
 
-const plainTextPassword = "adminadmin";
+//const plainTextPassword = "teacherpwdjustfortest";
+
+const plainTextPassword = "adminaziz";
+
 
 (async () => {
   try {
