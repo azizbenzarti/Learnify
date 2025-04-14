@@ -3,8 +3,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchAllContent, uploadContent, deleteContent } from "../../Redux/Actions/content";
 import { deleteChapter } from "../../Redux/Actions/chapter";
 import { FaTrash, FaUpload } from "react-icons/fa";
+import { getRoleFromToken } from "../../utils/auth";
 
 export default function ChapterContentCard({ chapterId, chapterName }) {
+  const token = localStorage.getItem("jwt");
+  const role = getRoleFromToken(token);
   const dispatch = useDispatch();
   const [file, setFile] = useState(null);
   const fileInputRef = useRef(null); // Add a reference to the file input
@@ -108,6 +111,7 @@ export default function ChapterContentCard({ chapterId, chapterName }) {
                 <img src="/Assets/pdf.png" alt="PDF Icon" className="w-5 h-5 inline-block" />
                 <span className="ml-2">View {content.fileType} file</span>
               </a>
+              {role!=="student" && (
               <button
                 onClick={() => handleDeleteContent(content._id)}
                 disabled={deleteLoading}
@@ -115,42 +119,48 @@ export default function ChapterContentCard({ chapterId, chapterName }) {
               >
                 <FaTrash className="w-5 h-5" />
               </button>
+              )}
             </div>
           ))
         ) : (
           <div className="text-gray-500 text-center px-6">No content yet</div>
         )}
       </div>
-      {/* Upload file input and button */}
-      <div className="flex items-center justify-between p-4">
-        <div className="flex items-center gap-2">
-          <input
-            type="file"
-            id={`file-upload-${chapterId}`}
-            className="hidden"
-            onChange={handleFileChange}
-            ref={fileInputRef} // Add the ref to the file input
-          />
-          <label htmlFor={`file-upload-${chapterId}`} className="cursor-pointer text-gray-600 hover:text-gray-800">
-            <FaUpload className="w-5 h-5" />
-          </label>
-          {file && (
-            <button
-              onClick={handleUpload}
-              disabled={uploadLoading}
-              className="text-purple-600 hover:text-purple-700"
-            >
-              {uploadLoading ? "Uploading..." : "Upload"}
-            </button>
-          )}
-        </div>
-        <button onClick={handleDeleteChapter} className="text-red-500 hover:text-red-700">
+    {/* Upload file input and button - only for non-students */}
+{role !== "student" && (
+  <div className="flex items-center justify-between p-4">
+    <div className="flex items-center gap-2">
+      <input
+        type="file"
+        id={`file-upload-${chapterId}`}
+        className="hidden"
+        onChange={handleFileChange}
+        ref={fileInputRef}
+      />
+      <label 
+        htmlFor={`file-upload-${chapterId}`} 
+        className="cursor-pointer text-gray-600 hover:text-gray-800"
+      >
+        <FaUpload className="w-5 h-5" />
+      </label>
+      {file && (
+        <button
+          onClick={handleUpload}
+          disabled={uploadLoading}
+          className="text-purple-600 hover:text-purple-700"
+        >
+          {uploadLoading ? "Uploading..." : "Upload"}
+        </button>
+      )}
+    </div>
+  </div>
+)}
+        {role!=="student" && (
+        <button onClick={handleDeleteChapter} className="text-red-500 hover:text-red-700 absolute bottom-4 right-4">
           <FaTrash className="w-5 h-5" />
         </button>
-      </div>
-      {/* Error messages */}
-      {uploadError && <div className="text-red-500 text-sm px-6">{uploadError}</div>}
-      {deleteError && <div className="text-red-500 text-sm px-6">{deleteError}</div>}
-    </label>
+        )}
+
+      </label>
   );
 }

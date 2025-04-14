@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Courses from "../studentComponents/Courses";
+import CourseList from "../studentComponents/CourseList";
 import Exams from "../studentComponents/Exams";
 import Recommendations from "../studentComponents/Recommendations";
 import Chatbot from "../../components/Chatbot";
@@ -10,7 +10,7 @@ import Sidebar from "../studentComponents/SideBar";
 import Header from "../../components/Header";
 
 import PerformanceCard from "../../components/PerformanceCard";
-import CourseList from "../../components/Course/CourseList";
+
 
 const StudentDashboard = () => {
   const [showChatbot, setShowChatbot] = useState(false);

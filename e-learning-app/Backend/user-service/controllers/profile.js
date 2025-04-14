@@ -54,3 +54,4 @@ exports.deleteaccount = async (req, res) => {
     console.error(error);
   }
 };
+exports

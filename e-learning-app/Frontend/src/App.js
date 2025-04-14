@@ -7,7 +7,6 @@ import Studentdashboard from "./student/studentPages/StudentDashboard";
 import Teacherdashboard from "./teacher/teacherPages/TeacherDashboard";
 import TeacherCourses from "./teacher/teacherPages/TeacherCourses";
 import CoursePage from "./student/studentPages/CoursePage";
-import ChapterPage from "./student/studentPages/ChapterPage";
 import Grades from "./student/studentPages/Grades";
 import Login from "./pages/Login";
 import Home from "./pages/Home";
@@ -21,7 +20,7 @@ import CourseContent from "./pages/CourseContent";
 import LandingPage from "./pages/LandingPage";
 import AdminLogin from "./pages/AdminLogin";
 import AdminDashboard from "./admin/adminPages/AdminDashboard";
-
+import CourseInfo from "./components/Course/CourseInfo";
 import { AuthProvider } from "./contexts/userContext";
 
 
@@ -39,13 +38,10 @@ const App = () => {
               <Route path="/student" element={<Studentdashboard />} />
               <Route path="/teacher" element={<Teacherdashboard />} />
               <Route path="/teacher-courses" element={<TeacherCourses />} />
-              <Route path="/courses" element={<Courses />} />
-              <Route path="/course/:id" element={<CoursePage />} />
+              <Route path="/courses" element={<CoursePage />} />
+              <Route path="/course/:courseId" element={<CourseContent />} />
               <Route path="/teacher-settings" element={<TeacherSettings />} />
-              <Route
-                path="/course/:id/chapter/:chapterIndex"
-                element={<ChapterPage />}
-              />
+             
               <Route path="/notes" element={<Notes />} />
               <Route path="/student-settings" element={<Settings />} />
               <Route path="/grades" element={<Grades />} />

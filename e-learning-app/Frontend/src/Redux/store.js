@@ -23,7 +23,7 @@ import {
   contentUploadReducer 
 } from "./Reducers/content";
 
-
+import { enrollmentReducer } from './Reducers/enrollment'
 
 const persistConfig = {
     key: 'root',
@@ -45,7 +45,9 @@ const rootReducer = combineReducers({
     contentDeleteReducer,
     contentFetchAllReducer,
     contentFetchByIdReducer,
-    contentUploadReducer 
+    contentUploadReducer ,
+
+    enrollmentReducer,
 
     
 

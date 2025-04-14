@@ -1,4 +1,5 @@
 
+
 export const getRoleFromToken = (token) => {
   if (!token) return null;
   try {

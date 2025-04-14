@@ -98,8 +98,17 @@ export const getCourseDetails = (id) => async (dispatch) => {
   try {
     dispatch({ type: COURSE_DETAILS_REQUEST });
     console.log("Fetching course details for ID:", id);
+    const token = localStorage.getItem("jwt");
 
-    const { data } = await axios.get(`${BASE_URL}/course/${id}`);
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+
+    const cleanId = id.trim(); // sanitize the input
+    const { data } = await axios.get(`${BASE_URL}/course/${cleanId}`,config);
     console.log("API Response:", data);
 
     dispatch({ type: COURSE_DETAILS_SUCCESS, payload: data.course });
@@ -111,6 +120,7 @@ export const getCourseDetails = (id) => async (dispatch) => {
     });
   }
 };
+
 
 // ✅ Delete Course
 // export const deleteCourse = (id) => async (dispatch) => {

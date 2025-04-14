@@ -1,17 +1,25 @@
+
 const Course = require("../models/Course");
+// This is important!
+require("../../user-service/models/User"); 
+const { default: mongoose } = require("mongoose");
+
 
 const createCourse = async (courseData) => {
   return await Course.create(courseData);
 };
 
 const getCourses = async (req,res) => {
+ 
+
     return await Course.find();
+
 //   return await Course.find().populate("owner", "name email");
 };
 
 const getCourseById = async (courseId) => {
-//   return await Course.findById(courseId).populate("owner", "name email");
-  return await Course.findById(courseId);
+  return await Course.findById(courseId)
+  // return await Course.findById(courseId).populate('owner', 'name _id');
 };
 
 const updateCourse = async (courseId, courseData) => {

@@ -84,29 +84,11 @@ export default function CourseInfo() {
           </li>
         </ul>
         <ul className="sm:flex items-center text-sm text-gray-500">
-          <li>
-            Created by{" "}
-            <a href="#" className="font-bold">
-              Stella Johnson
-            </a>
-          </li>
           <span className="hidden sm:inline mx-3 text-2xl">·</span>
           <li>Last updated {course.updated_at}</li>
         </ul>
       </div>
-      <div className="mt-10 bg-white py-2">
-    <nav className="flex flex-wrap gap-4">
-      <a href="#" className="inline-flex whitespace-nowrap border-b-2 border-transparent py-2 px-3 text-sm font-medium text-gray-600 transition-all duration-200 ease-in-out hover:border-b-purple-600 hover:text-purple-600"> Announcements </a>
-
-      <a href="#" className="inline-flex whitespace-nowrap border-b-2 border-transparent py-2 px-3 text-sm font-medium text-gray-600 transition-all duration-200 ease-in-out hover:border-b-purple-600 hover:text-purple-600"> FAQs </a>
-
-      <a href="#" className="inline-flex whitespace-nowrap border-b-2 border-transparent py-2 px-3 text-sm font-medium text-gray-600 transition-all duration-200 ease-in-out hover:border-b-purple-600 hover:text-purple-600"> Curriculum </a>
-
-      <a href="#" className="inline-flex whitespace-nowrap border-b-2 border-transparent py-2 px-3 text-sm font-medium text-gray-600 transition-all duration-200 ease-in-out hover:border-b-purple-600 hover:text-purple-600"> Reviews </a>
-
-      <a href="#" className="inline-flex whitespace-nowrap border-b-2 border-transparent py-2 px-3 text-sm font-medium text-gray-600 transition-all duration-200 ease-in-out hover:border-b-purple-600 hover:text-purple-600"> Suppliers </a>
-    </nav>
-  </div>
+     
 
     </div>
   );

@@ -1,36 +1,32 @@
 const express = require("express");
-const connectDb = require("./configs/connectDb");
 const cors = require("cors");
 const dotenv = require("dotenv");
+const { default: mongoose } = require("mongoose");
 
 const app = express();
-
 
 // Load environment variables
 dotenv.config();
 
-
 // Middleware to parse JSON
 app.use(express.json());
-app.use(cors({ origin: [process.env.FRONTEND_URL,], credentials: true ,methods: ['GET', 'POST', 'PUT', 'DELETE','OPTIONS'] 
+app.use(cors({ origin: process.env.FRONTEND_URL, credentials: true ,  methods: ['GET']
 }));
+
+console.log("CORS enabled for:", process.env.FRONTEND_URL);
 
 
 
 // Connect to the database
-require('./configs/connectDb');
+require('./configs/connectDb.js');
 
 // Define port with a fallback
 const port = process.env.PORT ;
 
 // Use routes
-const contentRouter= require("./routes/content.js");
-const courseRouter= require("./routes/course.js");
-const chapterRouter= require("./routes/chapter.js");
+const enrollmentRouter= require("./routes/enrollment.js");
+app.use("/", enrollmentRouter);
 
-app.use("/content", contentRouter);
-app.use("/course", courseRouter);
-app.use("/chapter", chapterRouter);
 
 
 // Start the server

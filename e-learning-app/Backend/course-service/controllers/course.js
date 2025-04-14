@@ -20,7 +20,8 @@ const getCourses = async (req, res) => {
 
 const getCourseById = async (req, res) => {
   try {
-    const foundcourse = await CourseService.getCourseById(req.params.id);
+    const foundcourse = await CourseService.getCourseById(req.params.id.trim());
+    
     if (!foundcourse) {
       return res.status(404).json({ error: "Course not found" });
     }

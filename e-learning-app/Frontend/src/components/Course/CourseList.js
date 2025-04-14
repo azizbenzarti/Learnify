@@ -4,12 +4,17 @@ import { useDispatch, useSelector } from "react-redux";
 import { listCourses, deleteCourse } from "../../Redux/Actions/course";
 import AddCourseForm from "../../teacher/teacherComponents/AddCourseForm";
 import { useNavigate } from "react-router-dom";
-
+import { getIdFromToken } from "../../utils/auth";
 
 const CourseList = () => {
+  const token = localStorage.getItem("jwt");
+
   const navigate=useNavigate();
   const dispatch = useDispatch();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const user_id=getIdFromToken(token);
+  console.log(user_id);
+  
 
   // Select courses from Redux store
   const { loading, courses = [], error } = useSelector(
@@ -42,7 +47,9 @@ const CourseList = () => {
     <div className="mt-6">
       <h2 className="text-xl font-semibold">Your Courses</h2>
       <div className="mt-4 space-y-4">
-        {courses.map((course) => (
+      {courses
+        .filter(course => course.owner.trim()=== user_id) 
+        .map(course => (
           <div
             key={course._id}
             className="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition"
