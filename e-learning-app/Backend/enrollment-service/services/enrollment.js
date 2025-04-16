@@ -59,7 +59,7 @@ const getEnrollmentsByCourse = async (courseId,token) => {
       enrollments.map(async (enrollment) => {
         const studentId = enrollment.student;
         const student = studentId ? await makeAuthenticatedRequest(
-          `${process.env.USER_SERVICE_URL}/user/${studentId}`,
+          `${process.env.USER_SERVICE_URL}/profile/${studentId}`,
           token
         ) : null;
 

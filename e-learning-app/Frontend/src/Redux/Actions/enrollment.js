@@ -50,14 +50,14 @@ export const getEnrollmentsByCourse = (courseId, token) => async (dispatch) => {
   try {
     dispatch({ type: types.GET_ENROLLMENTS_BY_COURSE_REQUEST });
     
-    const enrollments = await api.getEnrollmentsByCourse(courseId, token);
+    const {data} = await api.getEnrollmentsByCourse(courseId, token);
     
     dispatch({
       type: types.GET_ENROLLMENTS_BY_COURSE_SUCCESS,
-      payload: enrollments
+      payload: data.enrollments
     });
     
-    return enrollments;
+    return data.enrollments;
   } catch (error) {
     dispatch({
       type: types.GET_ENROLLMENTS_BY_COURSE_FAILURE,

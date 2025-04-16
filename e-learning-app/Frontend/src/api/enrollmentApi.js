@@ -9,7 +9,7 @@ const api = axios.create({
   timeout: 10000,
 });
 const enrollStudent = (studentId, courseId) => {
-  return axios.post(`/enrollments`, { studentId, courseId });
+  return api.post(`/enrollment`, { studentId, courseId });
 };
 
 const getEnrollmentsByStudent = (studentId, token) => {
@@ -20,7 +20,7 @@ const getEnrollmentsByStudent = (studentId, token) => {
 };
 
 const getEnrollmentsByCourse = (courseId, token) => {
-  return axios.get(`}/courses/${courseId}`, {
+  return api.get(`/course/${courseId}`, {
     headers: { Authorization: `Bearer ${token}` }
   });
 };

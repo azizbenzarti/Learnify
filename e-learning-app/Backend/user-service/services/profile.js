@@ -196,3 +196,21 @@ exports.deleteaccount = async (userId) => {
     throw new Error("Error deleting user account: " + error.message);
   }
 };
+
+exports.getAllStudents = async () => {
+  return await userModel.find({ role: "student" }).select("-__v -adminDetails -tutorDetails");
+};
+ 
+exports.getStudentById = async (userId) => {
+  try {
+    const user = await userModel.findById(userId);
+    
+    if (!user) {
+      throw new Error("User not found");
+    }
+    
+    return user; // Make sure to return the found user
+  } catch (error) {
+    throw new Error(`Error finding user: ${error.message}`);
+  }
+};

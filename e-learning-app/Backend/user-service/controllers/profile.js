@@ -1,4 +1,5 @@
 const profileService = require("../services/profile");
+const { getAllStudents } = require("../services/profile");
 
 exports.updateuser = async (req, res) => {
   try {
@@ -54,4 +55,25 @@ exports.deleteaccount = async (req, res) => {
     console.error(error);
   }
 };
-exports
+
+exports.getAllStudents = async (req, res) => {
+  try {
+    const students = await getAllStudents();
+    res.status(200).json({ students });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+}; 
+
+exports.getStudentById = async (req, res) => {
+  try {
+    const student = await profileService.getStudentById(req.params.id);
+    res.status(200).json(student);
+  } catch (error) {
+    console.error(error);
+    res.status(error.message === "User not found" ? 404 : 500).json({
+      message: error.message || "Internal server error"
+    });
+  }
+};
+

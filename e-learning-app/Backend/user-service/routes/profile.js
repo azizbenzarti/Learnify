@@ -18,5 +18,10 @@ router.put("/updateuser", authenticate, profileController.updateuser);
 
 router.delete("/deleteaccount", profileController.deleteaccount);
 
+router.get("/student", authenticate,profileController.getAllStudents);
+
+router.get("/:id", authenticate, profileController.getStudentById);
+
+
 
 module.exports = router;
