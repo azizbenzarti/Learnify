@@ -16,7 +16,7 @@ const ChapterList = () => {
   const [chapterName, setChapterName] = useState('');
 
   const chapterList = useSelector((state) => state.chapterListReducer);
-  const { chapters } = chapterList;
+  const { chapters=[] } = chapterList;
 
   const chapterCreate = useSelector((state) => state.chapterCreateReducer);
   const { loading, success, error } = chapterCreate;

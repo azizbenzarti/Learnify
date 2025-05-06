@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
 import { HomeIcon, ChartBarIcon, CogIcon } from "@heroicons/react/24/outline";
 import { ClipboardIcon } from "@heroicons/react/24/outline";
+import { CalendarIcon } from '@heroicons/react/24/outline'; // Make sure this import is correct
+
 
 import { useNavigate } from "react-router-dom";
 
@@ -44,6 +46,12 @@ const Sidebar = () => {
             path: "/student-settings",
             icon: <CogIcon className="w-5 h-5" />,
           },
+
+        {
+          name:"schedule",
+          path:"/schedule",
+          icon:<CalendarIcon className="w-5 h-5" />,
+        }
         ].map((item, index) => (
           <li
             key={index}

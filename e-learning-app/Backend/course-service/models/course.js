@@ -14,6 +14,8 @@ const courseSchema = new mongoose.Schema({
   updated_at: { type: Date, default: Date.now },
 
   description: { type: String, required: false },
+
+  exam_date: { type: Date, required: false },
 });
 
 module.exports = mongoose.model("Course", courseSchema);

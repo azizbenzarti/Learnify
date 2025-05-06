@@ -22,6 +22,7 @@ import AdminLogin from "./pages/AdminLogin";
 import AdminDashboard from "./admin/adminPages/AdminDashboard";
 import CourseInfo from "./components/Course/CourseInfo";
 import { AuthProvider } from "./contexts/userContext";
+import SchedulePage from "./student/studentPages/schedule";
 
 
 
@@ -54,6 +55,7 @@ const App = () => {
               <Route path="/reset-password" element={<ResetPassword />} />
               <Route path="/chapter" element={<ChapterForm />} />
               <Route path="/course/:courseId" element={<CourseContent />} />
+              <Route path="schedule" element={<SchedulePage />} />
             </Routes>
           </div>
         </div>

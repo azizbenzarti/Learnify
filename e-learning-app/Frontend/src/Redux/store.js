@@ -2,6 +2,7 @@ import { combineReducers, createStore, applyMiddleware } from 'redux';
 import {thunk} from 'redux-thunk'; 
 import storage from 'redux-persist/lib/storage/index.js';
 import { persistStore, persistReducer } from 'redux-persist';
+
 import {
     courseCreateReducer,
     courseListReducer,
@@ -22,6 +23,12 @@ import {
   contentFetchByIdReducer,
   contentUploadReducer 
 } from "./Reducers/content";
+
+import { createStudyRequestReducer } from './Reducers/studyRequest';
+
+import {createStudyPlanReducer,
+    studentStudyPlanReducer }
+ from './Reducers/studyPlan';
 
 import { enrollmentReducer } from './Reducers/enrollment'
 
@@ -48,6 +55,11 @@ const rootReducer = combineReducers({
     contentUploadReducer ,
 
     enrollmentReducer,
+
+    createStudyRequestReducer,
+
+    createStudyPlanReducer,
+    studentStudyPlanReducer, 
 
     
 

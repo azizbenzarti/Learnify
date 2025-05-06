@@ -188,7 +188,7 @@ export default function CourseInfo() {
           <li>Last updated {course.updated_at}</li>
         </ul>
       </div>
-      {role==="teacher" && (
+      {role==="tutor" && (
       <button 
         onClick={handleEnrollStudents}
         className="bg-purple-600 hover:bg-purple-700 text-white font-medium py-2 px-4 rounded-md transition duration-300"

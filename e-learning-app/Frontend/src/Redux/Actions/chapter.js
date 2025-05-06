@@ -14,7 +14,7 @@ import {
   CHAPTER_DELETE_FAIL,
 } from "../Constants/chapter";
 
-import { BASE_URL } from "../Constants/BASE_URL";
+const BASE_URL=process.env.REACT_APP_COURSE_SERVICE_BASE_URL || "http://localhost:5000"
 
 // ✅ Create CHAPTER
 export const createChapter = (name, courseId) => async (dispatch) => {
