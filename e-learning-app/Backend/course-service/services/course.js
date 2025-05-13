@@ -1,5 +1,5 @@
 
-const Course = require("../models/Course");
+const Course = require("../models/course");
 // This is important!
 require("../../user-service/models/User"); 
 const { default: mongoose } = require("mongoose");

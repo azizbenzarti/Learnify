@@ -8,17 +8,17 @@ async function createStudyPlan(studyRequestId) {
     if (!studyRequestId) throw new Error('Study request ID is required');
 
 
-    //const existingPlan = await StudyPlan.findOne({ request: studyRequestId });
-    // if (existingPlan) {
+    const existingPlan = await StudyPlan.findOne({ request: studyRequestId });
+    if (existingPlan) {
       
      
-    //   return {
-    //     success: false,
-    //     error: 'A study plan already exists for this request',
-    //     existingPlan,
-    //     canRegenerate: !isPlanValid(existingPlan),
-    //   };
-    // }
+      return {
+        success: false,
+        error: 'A study plan already exists for this request',
+        existingPlan,
+        canRegenerate: !isPlanValid(existingPlan),
+      };
+    }
 
     const studyRequest = await StudyRequest.findById(studyRequestId);
     const studentId=studyRequest.student_id;
@@ -44,21 +44,32 @@ async function createStudyPlan(studyRequestId) {
       throw new Error('Generated study plan is incomplete');
     }
 
-    const savedPlan = await StudyPlan.create(transformedPlan);
-
-    return {
-      success: true,
-      studyPlan: await StudyPlan.findById(savedPlan._id),
-    };
-  } catch (error) {
-    console.error('Failed to create study plan:', error.message);
+   let savedPlan = null;
+try {
+  savedPlan = await StudyPlan.create(transformedPlan);
+} catch (creationError) {
+  if (creationError.code === 11000) {
+    // Duplicate key error — silently fail or return a generic response
     return {
       success: false,
-      error: error.message,
-      recoverySuggestion: 'Please check the study request and try again',
+      error: 'A study plan already exists for this request',
+      recoverySuggestion: 'You can regenerate or update the existing plan.',
     };
+  } else {
+    throw creationError; // other errors should still bubble up
   }
 }
+} catch (error) {
+  return {
+    success: false,
+    error: error.message || 'Unknown error',
+    recoverySuggestion: 'Please try again or contact support.',
+  };
+}
+return {
+  success: true,
+  studyPlan: await StudyPlan.findById(savedPlan._id),
+};}
 
 
 

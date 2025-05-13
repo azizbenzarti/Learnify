@@ -15,7 +15,7 @@ const courseSchema = new mongoose.Schema({
 
   description: { type: String, required: false },
 
-  exam_date: { type: Date, required: false },
+  exam_date: { type: Date, default: () => new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)  },
 });
 
 module.exports = mongoose.model("Course", courseSchema);

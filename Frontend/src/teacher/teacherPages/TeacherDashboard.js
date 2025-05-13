@@ -25,7 +25,7 @@ const TeacherDashboard = () => {
   ];
 
   return (
-    <div className="flex h-screen w-full absolute left-0 top-0">
+    <div className="flex h-screen w-full absolute left-0 top-0 bg-white">
       {/* Sidebar - Full height with blue background */}
       <div className="  bg-blue-700 h-full "> {/* Fixed width for sidebar */}
         <Sidebar />
@@ -34,7 +34,7 @@ const TeacherDashboard = () => {
       {/* Main Content Area */}
       <div className="flex-1  overflow-y-auto">
         {/* Header */}
-        <div className="bg-white p-4 shadow-sm">
+        <div className="bg-white p-4 ">
           <Header />
         </div>
 
