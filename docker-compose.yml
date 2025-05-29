@@ -1,0 +1,87 @@
+version: '3.9'
+
+services:
+  mongo:
+    image: mongo
+    container_name: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+  ai-service:
+    build:
+      context: .
+      dockerfile: Dockerfiles/aims.dockerfile
+    container_name: ai-service
+    ports:
+      - "5002:5002"
+    env_file :
+      - ./Backend/ai-service/.env
+    depends_on:
+      - user-service
+      - mongo
+    environment:
+      - MONGO_URL=mongodb://mongo:27017/learnify
+
+  course-service:
+    build: 
+      context: .
+      dockerfile: Dockerfiles/coursems.dockerfile
+    container_name: course-service
+    ports:
+      - "5000:5000"
+    env_file :
+      - ./Backend/course-service/.env
+    depends_on:
+      - user-service
+      - mongo
+    environment:
+      - MONGO_URL=mongodb://mongo:27017/learnify
+
+  enrollment-service:
+    build: 
+      context: .
+      dockerfile: Dockerfiles/enrollms.dockerfile
+    container_name: enrollment-service
+    ports:
+      - "5001:5001"
+    env_file :
+      - ./Backend/enrollment-service/.env
+    depends_on:
+      - user-service
+      - mongo
+    environment:
+      - MONGO_URL=mongodb://mongo:27017/learnify
+
+  user-service:
+    build: 
+      context: .
+      dockerfile: Dockerfiles/userms.dockerfile
+    container_name: user-service
+    ports:
+      - "3000:3000"
+    env_file : 
+      - ./Backend/user-service/.env
+    depends_on:
+      - mongo
+    environment:
+      - MONGO_URL=mongodb://mongo:27017/learnify
+
+  frontend:
+    build: 
+      context: .
+      dockerfile: Dockerfiles/frontend.dockerfile
+    container_name: client
+    ports:
+      - "3001:80"
+    env_file : 
+      - ./Frontend/.env
+    depends_on:
+      - ai-service
+      - course-service
+      - enrollment-service
+      - user-service
+
+volumes:
+  mongo_data:
