@@ -1,6 +1,5 @@
-const Course = require("../models/Course");
-// This is important!
-require("../../user-service/models/User");
+const Course = require("../models/course");
+// require("../../user-service/models/User");
 const { default: mongoose } = require("mongoose");
 
 const createCourse = async (courseData) => {

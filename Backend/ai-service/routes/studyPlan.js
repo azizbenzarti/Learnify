@@ -5,7 +5,10 @@ const {
   getStudyPlan,
   getStudentStudyPlan
 } = require('../controllers/studyPlan');  
-const authenticate = require('../../user-service/middlewares/auth'); 
+//const authenticate = require('../../user-service/middlewares/auth');  // for development setup
+
+const authenticate = require('../middlewares/auth'); // for docker setup
+
 // Create Study Plan
 router.post('/',authenticate, createStudyPlan);
 

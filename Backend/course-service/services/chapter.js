@@ -1,4 +1,4 @@
-const Chapter = require("../models/Chapter");
+const Chapter = require("../models/chapter");
 
 const createChapter = async (chapterData) => {
   return await Chapter.create(chapterData);

@@ -7,7 +7,10 @@ getStudentEnrollments,
 getCourseEnrollments,
 } = require("../controllers/enrollment");
 
-const authenticate=require("../../user-service/middlewares/auth");
+// const authenticate=require("../../user-service/middlewares/auth"); // for development setup 
+
+const authenticate = require('../middlewares/auth'); // for docker setup
+
 
 router.post("/enrollment",enroll);
 

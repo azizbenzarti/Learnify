@@ -7,5 +7,8 @@ RUN npm install
 
 COPY Backend/enrollment-service ./
 
+COPY Backend/user-service/middlewares/auth.js ./middlewares/auth.js
+
+
 EXPOSE 5001
 CMD ["node", "index.js"]

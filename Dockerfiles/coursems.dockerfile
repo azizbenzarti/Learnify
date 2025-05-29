@@ -9,5 +9,11 @@ RUN npm install
 
 COPY Backend/course-service ./
 
+COPY Backend/user-service/middlewares/auth.js ./middlewares/auth.js
+
+COPY Backend/user-service/middlewares/tutorAuth.js ./middlewares/tutorAuth.js
+
+
+
 EXPOSE 5000
 CMD ["node", "index.js"]
