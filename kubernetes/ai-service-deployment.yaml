@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ai-service
+  namespace: learnify
+  labels:
+    io.kompose.service: ai-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: ai-service
+  template:
+    metadata:
+      labels:
+        io.kompose.service: ai-service
+    spec:
+      containers:
+        - name: ai-service
+          image: azizbenzarti74/ai-service/latest
+          ports:
+            - containerPort: 5002
+              hostPort: 5002
+          env:
+            - name: COURSE_SERVICE_URL
+              value: http://course-service:5000
+            - name: ENROLLMENT_SERVICE_URL
+              value: http://enrollment-service:5001
+            - name: FRONTEND_URL
+              value: http://frontend:3001
+            - name: MONGO_URL
+              value: mongodb://mongo:27017/learnify
+            - name: PORT
+              value: "5002"
+            - name: USER_SERVICE_URL
+              value: http://user-service:3000
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: global-secrets
+                  key: JWT_SECRET
+            - name: GEMINI_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: global-secrets
+                  key: GEMINI_API_KEY
+            - name: GOOGLE_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: global-secrets
+                  key: GOOGLE_API_KEY

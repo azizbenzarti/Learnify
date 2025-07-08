@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.30.0 (9d8dcb518)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: frontend
+  name: frontend
+  namespace: learnify
+spec:
+  ports:
+    - name: "3001"
+      port: 3001
+      targetPort: 80
+  selector:
+    io.kompose.service: frontend
+status:
+  loadBalancer: {}

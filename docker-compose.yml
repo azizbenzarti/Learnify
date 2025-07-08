@@ -1,8 +1,6 @@
-version: '3.9'
-
 services:
   mongo:
-    image: mongo
+    image: mongo:4.4
     container_name: mongo
     ports:
       - "27017:27017"
@@ -16,67 +14,111 @@ services:
     container_name: ai-service
     ports:
       - "5002:5002"
-    env_file :
-      - ./Backend/ai-service/.env
+    environment:
+      - PORT=5003
+      - MONGO_URL="mongodb://127.0.0.1:27017/E-learning"
+      - GEMINI_API_KEY="AIzaSyCoIs8NzpsZom-GarNJXSKX1uBK92I5ju8"
+      - GOOGLE_API_KEY=AIzaSyB-qZEQNQUFBXEwHeG0V0_MUbDNAiXlAWM
+      - JWT_SECRET="thisjwtsecretforsmartelearningwebprojectsmumedtechswejuniorspringg2"
+      - FRONTEND_URL ="http://localhost:3001"
+      - COURSE_SERVICE_URL=http://localhost:5000
+      - USER_SERVICE_URL=http://localhost:3000
+      - ENROLLMENT_SERVICE_URL=http://localhost:5001
+    #env_file:
+      #- ./Backend/ai-service/.env    #relative path
+      #- /home/osboxes/Desktop/Apps/Learnify/Backend/ai-service/.env
     depends_on:
       - user-service
       - mongo
-    environment:
-      - MONGO_URL=mongodb://mongo:27017/learnify
+
 
   course-service:
-    build: 
+    build:
       context: .
       dockerfile: Dockerfiles/coursems.dockerfile
     container_name: course-service
     ports:
       - "5000:5000"
-    env_file :
-      - ./Backend/course-service/.env
+    environment:
+      - PORT=5000
+      - MONGO_URL="mongodb://127.0.0.1:27017/E-learning"
+      - JWT_SECRET="thisjwtsecretforsmartelearningwebprojectsmumedtechswejuniorspringg2"
+      - CLOUDINARY_CLOUD_NAME=dzzycr8bc
+      - CLOUDINARY_API_KEY=173278148318214
+      - CLOUDINARY_API_SECRET=dDpVdOBoywg_2LWguHbodK4485Q
+      - FRONTEND_URL ="http://localhost:3001"
+    #env_file:
+      #- ./Backend/course-service/.env   #relative path
+     # - /home/osboxes/Desktop/Apps/Learnify/Backend/course-service/.env
     depends_on:
       - user-service
       - mongo
-    environment:
-      - MONGO_URL=mongodb://mongo:27017/learnify
+
 
   enrollment-service:
-    build: 
+    build:
       context: .
       dockerfile: Dockerfiles/enrollms.dockerfile
     container_name: enrollment-service
     ports:
       - "5001:5001"
-    env_file :
-      - ./Backend/enrollment-service/.env
+    environment:
+      - PORT=5001
+      - MONGO_URL="mongodb://127.0.0.1:27017/E-learning"
+      - JWT_SECRET="thisjwtsecretforsmartelearningwebprojectsmumedtechswejuniorspringg2"
+      - COURSE_SERVICE_URL=http://localhost:5000
+      - USER_SERVICE_URL=http://localhost:3000
+      - FRONTEND_URL=http://localhost:3001
+    #env_file:
+      #- ./Backend/enrollment-service/.env  #relative path
+      #- /home/osboxes/Desktop/Apps/Learnify/Backend/enrollment-service/.env
     depends_on:
       - user-service
       - mongo
-    environment:
-      - MONGO_URL=mongodb://mongo:27017/learnify
+
 
   user-service:
-    build: 
+    build:
       context: .
       dockerfile: Dockerfiles/userms.dockerfile
     container_name: user-service
     ports:
       - "3000:3000"
-    env_file : 
-      - ./Backend/user-service/.env
+    environment:
+      - BASE_URL="http://localhost:3000"
+      - PORT=3000
+      - MONGO_URL="mongodb://127.0.0.1:27017/E-learning"
+      - FRONTEND_URL ="http://localhost:3001"
+      - GMAIL_USER="azizbenzarti74@gmail.com"
+      - GMAIL_PASS="amub pmyu lqkj botg"
+      - JWT_SECRET="thisjwtsecretforsmartelearningwebprojectsmumedtechswejuniorspringg2"
+      - CLOUDINARY_CLOUD_NAME='dzgtooouo'
+      - CLOUDINARY_API_KEY='567489985168487'
+      - CLOUDINARY_SECRET_KEY='dhyq7fzJAtW59BEnwoaxuXsiNt0'
+    #env_file:
+      #- ./Backend/user-service/.env  #relative path
+      #- /home/osboxes/Desktop/Apps/Learnify/Backend/user-service/.env
     depends_on:
       - mongo
-    environment:
-      - MONGO_URL=mongodb://mongo:27017/learnify
+
 
   frontend:
-    build: 
+    build:
       context: .
       dockerfile: Dockerfiles/frontend.dockerfile
     container_name: client
     ports:
       - "3001:80"
-    env_file : 
-      - ./Frontend/.env
+    environment:
+      - PORT=3001
+      - REACT_APP_AUTHSERVICE_USER_BASE_URL=http://localhost:3000/user
+      - REACT_APP_AUTHSERVICE_PROFILE_BASE_URL=http://localhost:3000/profile
+      - REACT_APP_ENROLLMENT_SERVICE_URL=http://localhost:5001
+      - REACT_APP_AUTHSERVICE_ADMIN_BASE_URL=http://localhost:3000/admin
+      - REACT_APP_COURSE_SERVICE_BASE_URL=http://localhost:5000
+    #env_file:
+      #- ./Frontend/.env  #relative path
+     # - /home/osboxes/Desktop/Apps/Learnify/Frontend/.env
     depends_on:
       - ai-service
       - course-service
